@@ -2,8 +2,9 @@ package com.eddnav.picgif.remote
 
 import com.eddnav.picgif.remote.gif.model.RandomResponse
 import com.eddnav.picgif.remote.gif.model.TrendingResponse
-import io.reactivex.Observable
+import io.reactivex.Single
 import retrofit2.http.GET
+import retrofit2.http.Query
 
 /**
  * @author Eduardo Naveda
@@ -11,10 +12,10 @@ import retrofit2.http.GET
 interface GiphyService {
 
     @GET("/v1/gifs/trending")
-    fun trending(): Observable<TrendingResponse>
+    fun trending(@Query("offset") offset: Int, @Query("limit") limit: Int): Single<TrendingResponse>
 
     @GET("/v1/gifs/random")
-    fun random(): Observable<RandomResponse>
+    fun random(): Single<RandomResponse>
 
     companion object {
         const val BASE_URL = "https://api.giphy.com"
