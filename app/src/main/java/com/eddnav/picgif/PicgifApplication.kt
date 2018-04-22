@@ -7,6 +7,11 @@ import android.app.Application
  */
 class PicgifApplication : Application() {
 
+    val applicationComponent: ApplicationComponent by lazy {
+        DaggerApplicationComponent.builder()
+                .build()
+    }
+
     override fun onCreate() {
         super.onCreate()
     }

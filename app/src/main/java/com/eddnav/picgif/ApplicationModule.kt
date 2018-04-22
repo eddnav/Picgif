@@ -7,10 +7,8 @@ import dagger.Provides
  * @author Eduardo Naveda
  */
 @Module
-class ApplicationModule(val application: PicgifApplication) {
+class ApplicationModule(private val application: PicgifApplication) {
 
     @Provides
-    fun Application() : PicgifApplication {
-        return application
-    }
+    fun application(): PicgifApplication = application
 }
