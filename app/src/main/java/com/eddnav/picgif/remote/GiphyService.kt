@@ -7,7 +7,7 @@ import retrofit2.http.GET
 /**
  * @author Eduardo Naveda
  */
-interface Api {
+interface GiphyService {
 
     @GET("/v1/gifs/trending")
     fun trending() : TrendingResponse
@@ -17,6 +17,7 @@ interface Api {
 
     companion object {
         const val BASE_URL = "api.giphy.com"
+        const val API_KEY_PARAM = "api_key"
         const val API_KEY = "dc6zaTOxFJmzC"
     }
 }
