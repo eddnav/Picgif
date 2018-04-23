@@ -8,6 +8,8 @@ import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.StaggeredGridLayoutManager
 import android.view.View
+import android.view.View.GONE
+import android.view.View.VISIBLE
 import com.eddnav.picgif.PicgifApplication
 import com.eddnav.picgif.R
 import com.eddnav.picgif.data.gif.Data
@@ -16,7 +18,6 @@ import com.eddnav.picgif.presentation.ViewModelFactory
 import com.eddnav.picgif.view.gif.GifAdapter
 import kotlinx.android.synthetic.main.activity_main.*
 import javax.inject.Inject
-
 
 /**
  * @author Eduardo Naveda
@@ -35,8 +36,7 @@ class MainActivity : AppCompatActivity() {
         val manager = StaggeredGridLayoutManager(GRID_SPAN_COUNT, StaggeredGridLayoutManager.VERTICAL)
         recycler.layoutManager = manager
         recycler.adapter = GifAdapter(this, mutableListOf())
-        val spacing = resources.getDimensionPixelSize(R.dimen.grid_spacing)
-        recycler.addItemDecoration(GifGridItemDecoration(spacing))
+        recycler.addItemDecoration(GifGridItemDecoration(resources.getDimensionPixelSize(R.dimen.grid_spacing)))
 
         (application as PicgifApplication).applicationComponent.inject(this)
         viewModel = ViewModelProviders.of(this, viewModelFactory).get(TrendingViewModel::class.java)
@@ -50,16 +50,30 @@ class MainActivity : AppCompatActivity() {
             }
         })
 
-        viewModel.load()
+        // Might want to make this loading indicator part of the list.
+        viewModel.isLoading.observe(this, Observer {
+            if (it!!.initial) {
+                if(it.state) initializing.visibility = VISIBLE else initializing.visibility = GONE
+            }
+            else {
+                if(it.state) loading.visibility = VISIBLE else loading.visibility = GONE
+            }
+        })
 
-        more.setOnClickListener { viewModel.load() }
+        viewModel.initialize()
+
+        recycler.addOnScrollListener(object : RecyclerViewEndThresholdListener(manager, 5) {
+            override fun onThresholdReached() {
+                viewModel.load()
+            }
+        })
     }
 
     inner class GifGridItemDecoration(private val spacing: Int) : RecyclerView.ItemDecoration() {
 
         /**
          * Note: removing the bottom spacing for the N-[GRID_SPAN_COUNT]..N items creates an issue with
-         * [StaggeredGridLayoutManager] when adding new items where the spacing is missing and makes
+         * [StaggeredGridLayoutManager] when adding new items, where the spacing is missing and makes
          * it look as if two images were joined together. As it is unlikely that an user would go
          * through every item in the infinite scrolling to see the spacing at the bottom of the last
          * item, it makes sense just to leave it as it is.

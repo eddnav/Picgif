@@ -2,7 +2,8 @@
 <resources>
     <color name="colorPrimary">#de1d28</color>
     <color name="colorPrimaryDark">#b11720</color>
-    <color name="colorAccent">#2d60bd</color>
+    <color name="colorAccent">#fdd835
+    </color>
     <color name="placeholder0">#2d60bd</color>
     <color name="placeholder1">#fdd835</color>
     <color name="placeholder2">#7cB342</color>
