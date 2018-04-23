@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">Picgif</string>
+    <string name="internet_problems">Internet problems?</string>
 </resources>

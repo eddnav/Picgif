@@ -11,6 +11,7 @@ import dagger.multibindings.IntoMap
 @Module
 abstract class ViewModelModule {
 
+    @SuppressWarnings("unused")
     @Binds
     @IntoMap
     @ViewModelKey(TrendingViewModel::class)

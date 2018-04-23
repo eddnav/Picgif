@@ -10,6 +10,7 @@ import android.support.v7.widget.StaggeredGridLayoutManager
 import android.view.View
 import android.view.View.GONE
 import android.view.View.VISIBLE
+import android.widget.Toast
 import com.eddnav.picgif.PicgifApplication
 import com.eddnav.picgif.R
 import com.eddnav.picgif.data.gif.Data
@@ -43,19 +44,19 @@ class MainActivity : AppCompatActivity() {
 
         viewModel.trendingUpdates.observe(this, Observer {
             if (it?.status == Data.Status.ERROR) {
-                //error = "ERROR!"
+                Toast.makeText(this, R.string.internet_problems, Toast.LENGTH_LONG).show()
             } else {
                 val newGifs = it?.content!!
                 (recycler.adapter as GifAdapter).insert(newGifs)
             }
         })
 
-        // Might want to make this loading indicator part of the list.
         viewModel.isLoading.observe(this, Observer {
             if (it!!.initial) {
                 if(it.state) initializing.visibility = VISIBLE else initializing.visibility = GONE
             }
             else {
+                // Might want to make this loading indicator part of the list in some way.
                 if(it.state) loading.visibility = VISIBLE else loading.visibility = GONE
             }
         })
