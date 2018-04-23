@@ -11,8 +11,4 @@ class PicgifApplication : Application() {
         DaggerApplicationComponent.builder()
                 .build()
     }
-
-    override fun onCreate() {
-        super.onCreate()
-    }
 }

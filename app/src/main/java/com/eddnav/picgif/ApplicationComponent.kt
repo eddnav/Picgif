@@ -6,6 +6,7 @@ import com.eddnav.picgif.presentation.ViewModelModule
 import com.eddnav.picgif.remote.RemoteModule
 import com.eddnav.picgif.view.MainActivity
 import dagger.Component
+import okhttp3.OkHttpClient
 
 /**
  * @author Eduardo Naveda
@@ -15,6 +16,8 @@ import dagger.Component
 interface ApplicationComponent {
 
     val viewModelFactory: ViewModelFactory
+
+    val okHttp: OkHttpClient
 
     val gifRepository: GifRepository
 
