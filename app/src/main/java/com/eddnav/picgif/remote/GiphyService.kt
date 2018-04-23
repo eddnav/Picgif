@@ -18,6 +18,7 @@ interface GiphyService {
     fun random(): Single<RandomResponse>
 
     companion object {
+
         const val BASE_URL = "https://api.giphy.com"
         const val HOST = "api.giphy.com"
         const val API_KEY_PARAM = "api_key"
