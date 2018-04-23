@@ -20,7 +20,7 @@ class TrendingViewModel @Inject constructor(private val gifRepository: GifReposi
     private val disposables: CompositeDisposable = CompositeDisposable()
 
     val current: MutableList<Gif> = mutableListOf()
-    
+
     val trendingUpdates: MutableLiveData<Data<List<Gif>>> = MutableLiveData()
     val isLoading: MutableLiveData<Boolean> = MutableLiveData()
 

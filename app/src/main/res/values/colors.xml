@@ -1,7 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#3F51B5</color>
-    <color name="colorPrimaryDark">#303F9F</color>
-    <color name="colorAccent">#FF4081</color>
-    <color name="black">#000</color>
+    <color name="colorPrimary">#de1d28</color>
+    <color name="colorPrimaryDark">#b11720</color>
+    <color name="colorAccent">#2d60bd</color>
+    <color name="placeholder0">#2d60bd</color>
+    <color name="placeholder1">#fdd835</color>
+    <color name="placeholder2">#7cB342</color>
+    <color name="placeholder3">#8e24aa</color>
+    <color name="placeholder4">#e53935</color>
 </resources>

@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <dimen name="standard_margin">16dp</dimen>
-    <dimen name="grid_spacing">2dp</dimen>
-    <dimen name="grid_gif_item_height_125">180dp</dimen>
-    <dimen name="grid_gif_item_height_133">140dp</dimen>
-    <dimen name="grid_gif_item_height_160">100dp</dimen>
+    <dimen name="grid_spacing">4dp</dimen>
+    <dimen name="grid_gif_item_height_125">190dp</dimen>
+    <dimen name="grid_gif_item_height_133">160dp</dimen>
+    <dimen name="grid_gif_item_height_160">130dp</dimen>
 </resources>

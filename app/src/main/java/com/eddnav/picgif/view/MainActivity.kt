@@ -5,14 +5,12 @@ import android.arch.lifecycle.ViewModelProviders
 import android.graphics.Rect
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
-import android.support.v7.util.DiffUtil
 import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.StaggeredGridLayoutManager
 import android.view.View
 import com.eddnav.picgif.PicgifApplication
 import com.eddnav.picgif.R
 import com.eddnav.picgif.data.gif.Data
-import com.eddnav.picgif.data.gif.model.Gif
 import com.eddnav.picgif.presentation.TrendingViewModel
 import com.eddnav.picgif.presentation.ViewModelFactory
 import com.eddnav.picgif.view.gif.GifAdapter
@@ -59,24 +57,23 @@ class MainActivity : AppCompatActivity() {
 
     inner class GifGridItemDecoration(private val spacing: Int) : RecyclerView.ItemDecoration() {
 
+        /**
+         * Note: removing the bottom spacing for the N-[GRID_SPAN_COUNT]..N items creates an issue with
+         * [StaggeredGridLayoutManager] when adding new items where the spacing is missing and makes
+         * it look as if two images were joined together. As it is unlikely that an user would go
+         * through every item in the infinite scrolling to see the spacing at the bottom of the last
+         * item, it makes sense just to leave it as it is.
+         */
         override fun getItemOffsets(outRect: Rect, view: View, parent: RecyclerView, state: RecyclerView.State) {
             super.getItemOffsets(outRect, view, parent, state)
 
-            val position = parent.getChildAdapterPosition(view)
-            val size = parent.adapter.itemCount
             val layoutParams = view.layoutParams as StaggeredGridLayoutManager.LayoutParams
 
-            if (position in 0..(size - 2)) {
-                if (layoutParams.spanIndex == 0) {
-                    outRect.right = spacing
-                    outRect.bottom = spacing
-                } else {
-                    outRect.bottom = spacing
-                }
+            if (layoutParams.spanIndex == 0) {
+                outRect.right = spacing
+                outRect.bottom = spacing
             } else {
-                if (layoutParams.spanIndex == 0) {
-                    outRect.right = spacing
-                }
+                outRect.bottom = spacing
             }
         }
     }

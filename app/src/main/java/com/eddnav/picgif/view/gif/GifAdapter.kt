@@ -1,7 +1,6 @@
 package com.eddnav.picgif.view.gif
 
 import android.content.Context
-import android.support.v7.util.DiffUtil
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
@@ -21,7 +20,7 @@ class GifAdapter(private val context: Context, private val gifs: MutableList<Gif
     }
 
     override fun onBindViewHolder(holder: GifViewHolder, position: Int) {
-        holder.bind(gifs[position])
+        holder.bind(gifs[position], position)
     }
 
     override fun getItemViewType(position: Int): Int {
@@ -54,38 +53,39 @@ class GifAdapter(private val context: Context, private val gifs: MutableList<Gif
         }
     }
 
-    inner class GifViewHolder(val view: View) : RecyclerView.ViewHolder(view) {
-
-        fun bind(gif: Gif) {
-            GlideApp.with(context)
-                    .load(gif.preview.url)
-                    .centerCrop()
-                    .into(view as ImageView)
-            view.setOnClickListener { println("It does nothing yet, sob...") }
-        }
-    }
-
     fun insert(newGifs: List<Gif>) {
         val top = gifs.size
         gifs.addAll(newGifs)
         this.notifyItemRangeInserted(top, newGifs.size)
     }
 
-    inner class DiffCallback(val newGifs: List<Gif>) : DiffUtil.Callback() {
-        override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
-            return gifs[oldItemPosition].id == newGifs[newItemPosition].id
+    fun getPlaceholderColor(position: Int): Int {
+        val type = position % PLACEHOLDER_TYPE_COUNT
+        return when(type) {
+            0 -> R.color.placeholder0
+            1 -> R.color.placeholder1
+            2 -> R.color.placeholder2
+            3 -> R.color.placeholder3
+            4 -> R.color.placeholder4
+            else -> {
+                throw IllegalArgumentException("Placeholder type $type unknown")
+            }
         }
+    }
 
-        override fun getOldListSize(): Int {
-            return gifs.size
-        }
+    inner class GifViewHolder(val view: View) : RecyclerView.ViewHolder(view) {
 
-        override fun getNewListSize(): Int {
-            return newGifs.size
+        fun bind(gif: Gif, position: Int) {
+            GlideApp.with(context)
+                    .load(gif.preview.url)
+                    .placeholder(getPlaceholderColor(position))
+                    .centerCrop()
+                    .into(view as ImageView)
+            view.setOnClickListener { println("It does nothing yet, sob...") }
         }
+    }
 
-        override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
-            return gifs[oldItemPosition] == newGifs[newItemPosition]
-        }
+    companion object {
+        const val PLACEHOLDER_TYPE_COUNT = 5
     }
 }
