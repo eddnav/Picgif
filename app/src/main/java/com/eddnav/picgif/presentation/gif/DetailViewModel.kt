@@ -6,7 +6,6 @@ import com.eddnav.picgif.data.gif.Data
 import com.eddnav.picgif.data.gif.model.Gif
 import com.eddnav.picgif.data.gif.repository.GifRepository
 import io.reactivex.Observable
-import io.reactivex.Observer
 import io.reactivex.SingleObserver
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
@@ -21,37 +20,34 @@ import javax.inject.Inject
 class DetailViewModel @Inject constructor(private val gifRepository: GifRepository) : ViewModel() {
 
     private val disposables = CompositeDisposable()
-    private val interval = Observable.interval(1, TimeUnit.SECONDS)
+    private var intervalDisposable: Disposable? = null
 
+    private var interval = 0L
     private var fetching = false
-    private var current: Gif? = null
+    private var next: Gif? = null
 
     val currentUpdates: MutableLiveData<Data<Gif>> = MutableLiveData()
     val intervalUpdates: MutableLiveData<Long> = MutableLiveData()
 
-    fun initialize() {
-        fetchRandom()
-        interval.observeOn(AndroidSchedulers.mainThread())
-                .subscribeWith(object : Observer<Long> {
-                    override fun onComplete() {}
-
-                    override fun onSubscribe(disposable: Disposable) {
-                        disposables.add(disposable)
+    fun start() {
+        if (next == null) fetchRandom()
+        val interval = Observable.interval(1, TimeUnit.SECONDS)
+        intervalDisposable = interval.observeOn(AndroidSchedulers.mainThread())
+                .doOnNext {
+                    // This will take an extra second, but the user sees 10 and 0 and it's
+                    // clearer than finishing at 1.
+                    val seconds = SECONDS_PER_CHANGE - this.interval % (SECONDS_PER_CHANGE + 1)
+                    if (seconds == 0L) {
+                        currentUpdates.value = Data(next, Data.Status.OK)
+                        fetchRandom()
                     }
+                    intervalUpdates.value = seconds
+                    this.interval++
+                }.subscribe()
+    }
 
-                    override fun onNext(n: Long) {
-                        // This will take an extra second, but the user sees 10 and 0 and it's
-                        // clearer than finishing at 1.
-                        val seconds = SECONDS_PER_CHANGE - n % (SECONDS_PER_CHANGE + 1)
-                        if (seconds == 0L) {
-                            currentUpdates.value = Data(current, Data.Status.OK)
-                            fetchRandom()
-                        }
-                        intervalUpdates.value = seconds
-                    }
-
-                    override fun onError(e: Throwable) {}
-                })
+    fun pause() {
+        intervalDisposable?.dispose()
     }
 
     private fun fetchRandom() {
@@ -67,7 +63,7 @@ class DetailViewModel @Inject constructor(private val gifRepository: GifReposito
 
                         override fun onSuccess(gif: Gif) {
                             fetching = false
-                            current = gif
+                            next = gif
                         }
 
                         override fun onError(e: Throwable) {
@@ -79,6 +75,7 @@ class DetailViewModel @Inject constructor(private val gifRepository: GifReposito
     }
 
     override fun onCleared() {
+        intervalDisposable?.dispose()
         disposables.dispose()
         super.onCleared()
     }

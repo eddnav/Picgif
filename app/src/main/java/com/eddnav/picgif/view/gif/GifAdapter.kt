@@ -2,6 +2,7 @@ package com.eddnav.picgif.view.gif
 
 import android.content.Context
 import android.content.Intent
+import android.os.Bundle
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
@@ -84,6 +85,8 @@ class GifAdapter(private val context: Context, private val gifs: MutableList<Gif
                     .into(view as ImageView)
             view.setOnClickListener {
                 val intent = Intent(context, GifDetailActivity::class.java)
+                intent.putExtra(GifDetailActivity.INITIAL_TITLE_EXTRA, gif.title)
+                intent.putExtra(GifDetailActivity.INITIAL_URL_EXTRA, gif.image.mp4Url)
                 context.startActivity(intent)
             }
         }

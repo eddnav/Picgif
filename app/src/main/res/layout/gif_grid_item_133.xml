@@ -4,5 +4,5 @@
     android:id="@+id/gif"
     android:layout_width="match_parent"
     android:layout_height="@dimen/grid_gif_item_height_133"
-    android:background="?android:colorBackground"
+    android:foreground="?android:selectableItemBackground"
     tools:ignore="ContentDescription" />

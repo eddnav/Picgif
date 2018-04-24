@@ -6,7 +6,6 @@ import android.net.Uri
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.view.View
-import android.widget.Toast
 import com.eddnav.picgif.PicgifApplication
 import com.eddnav.picgif.R
 import com.eddnav.picgif.data.gif.Data
@@ -16,7 +15,6 @@ import com.eddnav.picgif.presentation.gif.DetailViewModel
 import com.google.android.exoplayer2.*
 import com.google.android.exoplayer2.source.ExtractorMediaSource
 import com.google.android.exoplayer2.source.TrackGroupArray
-import com.google.android.exoplayer2.trackselection.AdaptiveTrackSelection
 import com.google.android.exoplayer2.trackselection.DefaultTrackSelector
 import com.google.android.exoplayer2.trackselection.TrackSelectionArray
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory
@@ -39,9 +37,6 @@ class GifDetailActivity : AppCompatActivity() {
 
     private lateinit var viewModel: DetailViewModel
 
-    private val someUrl = "https://media1.giphy.com/media/kFMBjFbBObj8lleCBk/giphy.mp4?cid=e1bb72ff5ade038b2e72556f495fb127"
-    private val someUrl2 = "https://media1.giphy.com/media/kFMBjFbBObj8lleCBk/giphy-downsized-small.mp4?cid=e1bb72ff5ade038b2e72556f495fb127"
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_gif_detail)
@@ -49,8 +44,7 @@ class GifDetailActivity : AppCompatActivity() {
         (application as PicgifApplication).applicationComponent.inject(this)
         viewModel = ViewModelProviders.of(this, viewModelFactory).get(DetailViewModel::class.java)
 
-        val videoTrackSelectionFactory = AdaptiveTrackSelection.Factory(null)
-        val trackSelector = DefaultTrackSelector(videoTrackSelectionFactory)
+        val trackSelector = DefaultTrackSelector()
         player = ExoPlayerFactory.newSimpleInstance(this, trackSelector)
         dataSourceFactory = DefaultDataSourceFactory(this,
                 Util.getUserAgent(this, getString(R.string.app_name)), null)
@@ -85,15 +79,12 @@ class GifDetailActivity : AppCompatActivity() {
         })
         playerView.player = player
 
-        header.text = "Some title"
-        playVideo(someUrl)
-
         viewModel.currentUpdates.observe(this, Observer {
             if (it?.status == Data.Status.OK) {
                 if (it.content != null) {
                     val gif: Gif = it.content
                     header.text = gif.title
-                    playVideo(gif.image.url)
+                    playVideo(gif.image.mp4Url!!)
                 }
             }
         })
@@ -102,7 +93,20 @@ class GifDetailActivity : AppCompatActivity() {
             time.text = it!!.toString().padStart(2, '0')
         })
 
-        if (savedInstanceState == null) viewModel.initialize()
+        if (intent.extras != null) {
+            header.text = intent.getStringExtra(INITIAL_TITLE_EXTRA)
+            playVideo(intent.getStringExtra(INITIAL_URL_EXTRA))
+        }
+    }
+
+    override fun onStart() {
+        super.onStart()
+        viewModel.start()
+    }
+
+    override fun onPause() {
+        super.onPause()
+        viewModel.pause()
     }
 
     private fun playVideo(url: String) {
@@ -116,5 +120,10 @@ class GifDetailActivity : AppCompatActivity() {
     override fun onDestroy() {
         player.release()
         super.onDestroy()
+    }
+
+    companion object {
+        const val INITIAL_TITLE_EXTRA = "initial_title_extra"
+        const val INITIAL_URL_EXTRA = "initial_url_extra"
     }
 }
