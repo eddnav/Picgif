@@ -14,8 +14,8 @@ import android.widget.Toast
 import com.eddnav.picgif.PicgifApplication
 import com.eddnav.picgif.R
 import com.eddnav.picgif.data.gif.Data
-import com.eddnav.picgif.presentation.gif.TrendingViewModel
 import com.eddnav.picgif.di.ViewModelFactory
+import com.eddnav.picgif.presentation.gif.TrendingViewModel
 import com.eddnav.picgif.view.gif.GifAdapter
 import kotlinx.android.synthetic.main.activity_main.*
 import javax.inject.Inject
@@ -55,11 +55,10 @@ class MainActivity : AppCompatActivity() {
 
         viewModel.isLoading.observe(this, Observer {
             if (it!!.initial) {
-                if(it.state) initializing.visibility = VISIBLE else initializing.visibility = GONE
-            }
-            else {
+                if (it.state) initializing.visibility = VISIBLE else initializing.visibility = GONE
+            } else {
                 // Might want to make this loading indicator part of the list in some way.
-                if(it.state) loading.visibility = VISIBLE else loading.visibility = GONE
+                if (it.state) loading.visibility = VISIBLE else loading.visibility = GONE
             }
         })
 

@@ -28,6 +28,6 @@ Third Party Libraries
 * Retrofit: facilitates interaction with HTTP APIs, reduces API related code to a neat interface. 
 * Moshi: chosen over Gson as the JSON library for conversions due to its Kotlin support and better efficiency.
 * Dagger: facilitates dependency injection, improves code modularity and clarity over dependency management.
-* RxJava: facilitates background tasks such as network calls and other asynchronous work due to its reactive nature, works nicely with the MVVM approach.
+* RxJava: facilitates background tasks such as network calls and other asynchronous work.
 * Glide: provides automatic image memory and disk caching as well as support for gifs. Chosen over Picasso for its gif support and chosen over Fresco due to its smaller footprint and the fact that it leverages the standard `ImageView`.
-* ExoPlayer: replacement to MediaPlayer for video, adds a bit to the app's overall size (~500kb), but provides more powerful capabilities and reduces the risk of device specific issues due to it being a library.
+* ExoPlayer: replacement to `MediaPlayer` for video, adds a bit to the app's overall size (~500kb), but provides more powerful capabilities and reduces the risk of device specific issues due to it being a library.

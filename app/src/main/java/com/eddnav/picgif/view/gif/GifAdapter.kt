@@ -2,7 +2,6 @@ package com.eddnav.picgif.view.gif
 
 import android.content.Context
 import android.content.Intent
-import android.os.Bundle
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
@@ -63,7 +62,7 @@ class GifAdapter(private val context: Context, private val gifs: MutableList<Gif
 
     fun getPlaceholderColor(position: Int): Int {
         val type = position % PLACEHOLDER_TYPE_COUNT
-        return when(type) {
+        return when (type) {
             0 -> R.color.placeholder0
             1 -> R.color.placeholder1
             2 -> R.color.placeholder2

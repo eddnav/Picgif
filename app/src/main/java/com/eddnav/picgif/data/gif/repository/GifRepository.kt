@@ -1,6 +1,5 @@
 package com.eddnav.picgif.data.gif.repository
 
-import com.eddnav.picgif.data.gif.Data
 import com.eddnav.picgif.data.gif.model.Gif
 import com.eddnav.picgif.remote.GiphyService
 import com.eddnav.picgif.remote.gif.mapper.RemoteMapper
