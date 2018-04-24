@@ -18,8 +18,8 @@ class GifRepository @Inject constructor(private val api: GiphyService) {
                 .map { it.data.map { RemoteMapper.toData(it) } }
     }
 
-    fun random(): Single<Data<Gif>> {
+    fun random(): Single<Gif> {
         return api.random()
-                .map { Data(RemoteMapper.toData(it.data), Data.Status.OK) }
+                .map { RemoteMapper.toData(it.data) }
     }
 }

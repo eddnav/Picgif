@@ -14,13 +14,15 @@ import android.widget.Toast
 import com.eddnav.picgif.PicgifApplication
 import com.eddnav.picgif.R
 import com.eddnav.picgif.data.gif.Data
-import com.eddnav.picgif.presentation.TrendingViewModel
+import com.eddnav.picgif.presentation.gif.TrendingViewModel
 import com.eddnav.picgif.presentation.ViewModelFactory
 import com.eddnav.picgif.view.gif.GifAdapter
 import kotlinx.android.synthetic.main.activity_main.*
 import javax.inject.Inject
 
 /**
+ * TODO: Might want to migrate the UI of this activity to a fragment to support other screen configs.
+ *
  * @author Eduardo Naveda
  */
 class MainActivity : AppCompatActivity() {

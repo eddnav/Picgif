@@ -1,4 +1,4 @@
-package com.eddnav.picgif.presentation
+package com.eddnav.picgif.presentation.gif
 
 import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.ViewModel
@@ -17,7 +17,7 @@ import javax.inject.Inject
  */
 class TrendingViewModel @Inject constructor(private val gifRepository: GifRepository) : ViewModel() {
 
-    private val disposables: CompositeDisposable = CompositeDisposable()
+    private val disposables = CompositeDisposable()
 
     val current: MutableList<Gif> = mutableListOf()
 

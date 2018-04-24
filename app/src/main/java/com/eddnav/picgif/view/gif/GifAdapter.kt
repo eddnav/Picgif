@@ -1,6 +1,7 @@
 package com.eddnav.picgif.view.gif
 
 import android.content.Context
+import android.content.Intent
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
@@ -81,7 +82,10 @@ class GifAdapter(private val context: Context, private val gifs: MutableList<Gif
                     .placeholder(getPlaceholderColor(position))
                     .centerCrop()
                     .into(view as ImageView)
-            view.setOnClickListener { println("It does nothing yet, sob...") }
+            view.setOnClickListener {
+                val intent = Intent(context, GifDetailActivity::class.java)
+                context.startActivity(intent)
+            }
         }
     }
 

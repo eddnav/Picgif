@@ -5,6 +5,7 @@ import com.eddnav.picgif.presentation.ViewModelFactory
 import com.eddnav.picgif.presentation.ViewModelModule
 import com.eddnav.picgif.remote.RemoteModule
 import com.eddnav.picgif.view.MainActivity
+import com.eddnav.picgif.view.gif.GifDetailActivity
 import dagger.Component
 import okhttp3.OkHttpClient
 
@@ -22,4 +23,6 @@ interface ApplicationComponent {
     val gifRepository: GifRepository
 
     fun inject(activity: MainActivity)
+
+    fun inject(activity: GifDetailActivity)
 }
