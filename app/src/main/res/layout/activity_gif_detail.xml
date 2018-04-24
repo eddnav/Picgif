@@ -4,25 +4,34 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:padding="@dimen/standard_margin"
     tools:context=".view.gif.GifDetailActivity">
 
-    <FrameLayout
+    <RelativeLayout
         android:id="@+id/playerFrame"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="@dimen/player_height"
         android:background="@color/videoBackground"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/header">
 
-        <com.google.android.exoplayer2.ui.SimpleExoPlayerView
-            android:id="@+id/playerView"
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/player_height"
-            app:use_controller="false" />
+        <com.google.android.exoplayer2.ui.AspectRatioFrameLayout
+            android:id="@+id/aspectFrame"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true">
 
-    </FrameLayout>
+            <!-- Gets along with dialog animations, unlike SurfaceView -->
+            <TextureView
+                android:id="@+id/playerView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+        </com.google.android.exoplayer2.ui.AspectRatioFrameLayout>
+
+    </RelativeLayout>
 
     <ProgressBar
         android:id="@+id/loading"
@@ -52,8 +61,8 @@
     <TextView
         android:id="@+id/time"
         style="?android:textAppearanceMedium"
-        android:layout_width="wrap_content"
-        android:layout_height="0dp"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
         android:background="?android:colorBackground"
         android:padding="@dimen/standard_margin"
         app:layout_constraintBottom_toBottomOf="@id/header"

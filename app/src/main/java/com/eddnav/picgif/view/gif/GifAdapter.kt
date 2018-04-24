@@ -87,6 +87,8 @@ class GifAdapter(private val context: Context, private val gifs: MutableList<Gif
                 val intent = Intent(context, GifDetailActivity::class.java)
                 intent.putExtra(GifDetailActivity.INITIAL_TITLE_EXTRA, gif.title)
                 intent.putExtra(GifDetailActivity.INITIAL_URL_EXTRA, gif.image.mp4Url)
+                intent.putExtra(GifDetailActivity.INITIAL_WIDTH_EXTRA, gif.image.width)
+                intent.putExtra(GifDetailActivity.INITIAL_HEIGHT_EXTRA, gif.image.height)
                 context.startActivity(intent)
             }
         }

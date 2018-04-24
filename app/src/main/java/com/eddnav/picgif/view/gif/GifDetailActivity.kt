@@ -71,20 +71,26 @@ class GifDetailActivity : AppCompatActivity() {
             override fun onTimelineChanged(timeline: Timeline?, manifest: Any?, reason: Int) {}
 
             override fun onPlayerStateChanged(playWhenReady: Boolean, playbackState: Int) {
-                if (playbackState != Player.STATE_READY) loading.visibility = View.VISIBLE else loading.visibility = View.GONE
+                if (playbackState != Player.STATE_READY) {
+                    loading.visibility = View.VISIBLE
+                    playerView.visibility = View.INVISIBLE
+                } else {
+                    loading.visibility = View.GONE
+                    playerView.visibility = View.VISIBLE
+                }
             }
 
             override fun onLoadingChanged(isLoading: Boolean) {
             }
         })
-        playerView.player = player
+        player.setVideoTextureView(playerView)
 
         viewModel.currentUpdates.observe(this, Observer {
             if (it?.status == Data.Status.OK) {
                 if (it.content != null) {
                     val gif: Gif = it.content
                     header.text = gif.title
-                    playVideo(gif.image.mp4Url!!)
+                    playVideo(gif.image.mp4Url!!, gif.image.width, gif.image.height)
                 }
             }
         })
@@ -95,7 +101,9 @@ class GifDetailActivity : AppCompatActivity() {
 
         if (intent.extras != null) {
             header.text = intent.getStringExtra(INITIAL_TITLE_EXTRA)
-            playVideo(intent.getStringExtra(INITIAL_URL_EXTRA))
+            playVideo(intent.getStringExtra(INITIAL_URL_EXTRA),
+                    intent.getIntExtra(INITIAL_WIDTH_EXTRA, 0),
+                    intent.getIntExtra(INITIAL_HEIGHT_EXTRA, 0))
         }
     }
 
@@ -109,11 +117,12 @@ class GifDetailActivity : AppCompatActivity() {
         viewModel.pause()
     }
 
-    private fun playVideo(url: String) {
+    private fun playVideo(url: String, width: Int, height: Int) {
         val videoUri = Uri.parse(url)
         val videoSource = ExtractorMediaSource.Factory(dataSourceFactory)
                 .createMediaSource(videoUri)
 
+        aspectFrame.setAspectRatio(width.toFloat() / height)
         player.prepare(videoSource)
     }
 
@@ -125,5 +134,7 @@ class GifDetailActivity : AppCompatActivity() {
     companion object {
         const val INITIAL_TITLE_EXTRA = "initial_title_extra"
         const val INITIAL_URL_EXTRA = "initial_url_extra"
+        const val INITIAL_WIDTH_EXTRA = "initial_width_extra"
+        const val INITIAL_HEIGHT_EXTRA = "initial_height_extra"
     }
 }
