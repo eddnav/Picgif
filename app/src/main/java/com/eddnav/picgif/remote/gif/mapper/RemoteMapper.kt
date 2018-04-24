@@ -13,7 +13,7 @@ class RemoteMapper {
     companion object {
 
         fun toData(gif: RemoteGif): Gif {
-            return Gif(gif.id, gif.title, toData(gif.images.fixed_width_downsampled), toData(gif.images.original))
+            return Gif(gif.id, gif.title, toData(gif.images.fixed_width_still), toData(gif.images.original))
         }
 
         private fun toData(image: RemoteImage): Image {

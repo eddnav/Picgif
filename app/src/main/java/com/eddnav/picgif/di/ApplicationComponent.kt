@@ -1,9 +1,6 @@
-package com.eddnav.picgif
+package com.eddnav.picgif.di
 
 import com.eddnav.picgif.data.gif.repository.GifRepository
-import com.eddnav.picgif.presentation.ViewModelFactory
-import com.eddnav.picgif.presentation.ViewModelModule
-import com.eddnav.picgif.remote.RemoteModule
 import com.eddnav.picgif.view.MainActivity
 import com.eddnav.picgif.view.gif.GifDetailActivity
 import dagger.Component

@@ -1,4 +1,4 @@
-package com.eddnav.picgif.presentation
+package com.eddnav.picgif.di
 
 import android.arch.lifecycle.ViewModel
 import com.eddnav.picgif.presentation.gif.DetailViewModel

@@ -1,6 +1,6 @@
-package com.eddnav.picgif.remote
+package com.eddnav.picgif.di
 
-import com.eddnav.picgif.Application
+import com.eddnav.picgif.remote.GiphyService
 import dagger.Module
 import dagger.Provides
 import okhttp3.Interceptor

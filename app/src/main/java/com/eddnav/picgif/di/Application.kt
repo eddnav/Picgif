@@ -1,4 +1,4 @@
-package com.eddnav.picgif
+package com.eddnav.picgif.di
 
 import javax.inject.Scope
 

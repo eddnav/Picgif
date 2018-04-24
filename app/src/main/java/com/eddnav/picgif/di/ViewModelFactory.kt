@@ -1,8 +1,7 @@
-package com.eddnav.picgif.presentation
+package com.eddnav.picgif.di
 
 import android.arch.lifecycle.ViewModel
 import android.arch.lifecycle.ViewModelProvider
-import com.eddnav.picgif.Application
 import javax.inject.Inject
 import javax.inject.Provider
 

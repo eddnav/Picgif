@@ -10,7 +10,7 @@ import com.eddnav.picgif.PicgifApplication
 import com.eddnav.picgif.R
 import com.eddnav.picgif.data.gif.Data
 import com.eddnav.picgif.data.gif.model.Gif
-import com.eddnav.picgif.presentation.ViewModelFactory
+import com.eddnav.picgif.di.ViewModelFactory
 import com.eddnav.picgif.presentation.gif.DetailViewModel
 import com.google.android.exoplayer2.*
 import com.google.android.exoplayer2.source.ExtractorMediaSource

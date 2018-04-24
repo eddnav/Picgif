@@ -1,5 +1,6 @@
-package com.eddnav.picgif
+package com.eddnav.picgif.di
 
+import com.eddnav.picgif.PicgifApplication
 import dagger.Module
 import dagger.Provides
 
