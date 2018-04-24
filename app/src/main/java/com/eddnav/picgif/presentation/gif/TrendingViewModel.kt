@@ -17,9 +17,9 @@ import javax.inject.Inject
  */
 class TrendingViewModel @Inject constructor(private val gifRepository: GifRepository) : ViewModel() {
 
-    private val disposables = CompositeDisposable()
+    private var loadObservable: Disposable? = null
 
-    val current: MutableList<Gif> = mutableListOf()
+    private val current: MutableList<Gif> = mutableListOf()
 
     val trendingUpdates: MutableLiveData<Data<List<Gif>>> = MutableLiveData()
     val isLoading: MutableLiveData<LoadingEvent> = MutableLiveData()
@@ -34,13 +34,13 @@ class TrendingViewModel @Inject constructor(private val gifRepository: GifReposi
     }
 
     fun load(from: Int? = null) {
-        if (!isLoading.value!!.state) {
+        if (loadObservable == null || loadObservable?.isDisposed == true) {
             // Giphy API's offset is inclusive (from, rather from next of),
             // so we add +1 as not to fetch an image we already have.
             val offset = from ?: current.size + 1
             val isInitial = offset == 0
             isLoading.value = LoadingEvent(true, isInitial)
-            gifRepository.trending(offset, LIMIT_PER_PAGE)
+            loadObservable = gifRepository.trending(offset, LIMIT_PER_PAGE)
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     // Filter images that were pushed down by new trending gifs.
@@ -49,33 +49,26 @@ class TrendingViewModel @Inject constructor(private val gifRepository: GifReposi
                                 it.id == g.id
                             }
                         }
-                    }
-                    .subscribeWith(object : SingleObserver<List<Gif>> {
-                        override fun onSubscribe(disposable: Disposable) {
-                            disposables.add(disposable)
-                        }
-
-                        override fun onSuccess(update: List<Gif>) {
-                            current.addAll(update)
-                            isLoading.value = LoadingEvent(false, isInitial)
-                            trendingUpdates.value = Data(update, Data.Status.OK)
-                            // If we get a filtered, smaller update due to items being pushed down in
-                            // the trending list, automatically start a new load request.
-                            if (update.size < LIMIT_PER_PAGE / 2) load()
-                        }
-
-                        override fun onError(e: Throwable) {
-                            isLoading.value = LoadingEvent(false, isInitial)
-                            trendingUpdates.value = Data(null, Data.Status.ERROR)
-                        }
-                    })
+                    }.doOnSuccess {
+                        current.addAll(it)
+                        isLoading.value = LoadingEvent(false, isInitial)
+                        trendingUpdates.value = Data(it, Data.Status.OK)
+                        // If we get a filtered, smaller update due to items being pushed down in
+                        // the trending list, automatically start a new load request.
+                        if (it.size < LIMIT_PER_PAGE / 2) load()
+                    }.doOnError {
+                        isLoading.value = LoadingEvent(false, isInitial)
+                        trendingUpdates.value = Data(null, Data.Status.ERROR)
+                    }.subscribe()
         }
     }
 
     data class LoadingEvent (val state: Boolean, val initial: Boolean)
 
     override fun onCleared() {
-        disposables.dispose()
+        if (loadObservable?.isDisposed == false) {
+            loadObservable?.dispose()
+        }
         super.onCleared()
     }
 
