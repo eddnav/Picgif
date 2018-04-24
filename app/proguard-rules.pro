@@ -33,6 +33,9 @@
 # Okio
 -dontwarn okio.**
 
+# OkHttp
+-dontwarn okhttp3.**
+
 # Moshi
 -dontwarn javax.annotation.**
 -keepclasseswithmembers class * {
