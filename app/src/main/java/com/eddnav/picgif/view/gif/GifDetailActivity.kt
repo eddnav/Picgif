@@ -6,11 +6,12 @@ import android.net.Uri
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.view.View
+import android.widget.Toast
 import com.eddnav.picgif.PicgifApplication
 import com.eddnav.picgif.R
-import com.eddnav.picgif.data.gif.Data
 import com.eddnav.picgif.data.gif.model.Gif
 import com.eddnav.picgif.di.ViewModelFactory
+import com.eddnav.picgif.presentation.Data
 import com.eddnav.picgif.presentation.gif.DetailViewModel
 import com.google.android.exoplayer2.*
 import com.google.android.exoplayer2.source.ExtractorMediaSource
@@ -86,12 +87,14 @@ class GifDetailActivity : AppCompatActivity() {
         player.setVideoTextureView(playerView)
 
         viewModel.currentUpdates.observe(this, Observer {
-            if (it?.status == Data.Status.OK) {
+            if (it?.type == Data.Type.UPDATE) {
                 if (it.content != null) {
                     val gif: Gif = it.content
                     header.text = gif.title
                     playVideo(gif.image.mp4Url!!, gif.image.width, gif.image.height)
                 }
+            } else if (it?.type == Data.Type.ERROR) {
+                Toast.makeText(this, R.string.internet_problems, Toast.LENGTH_LONG).show()
             }
         })
 

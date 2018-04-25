@@ -56,18 +56,20 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_chainStyle="packed"
+        android:gravity="center_vertical"
         tools:text="Title" />
 
     <TextView
         android:id="@+id/time"
         style="?android:textAppearanceMedium"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
         android:background="?android:colorBackground"
         android:padding="@dimen/standard_margin"
         app:layout_constraintBottom_toBottomOf="@id/header"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@id/header"
+        android:gravity="center"
         tools:text="00" />
 
 </android.support.constraint.ConstraintLayout>

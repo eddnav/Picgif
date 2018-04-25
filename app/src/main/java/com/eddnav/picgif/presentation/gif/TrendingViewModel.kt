@@ -2,9 +2,9 @@ package com.eddnav.picgif.presentation.gif
 
 import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.ViewModel
-import com.eddnav.picgif.data.gif.Data
 import com.eddnav.picgif.data.gif.model.Gif
 import com.eddnav.picgif.data.gif.repository.GifRepository
+import com.eddnav.picgif.presentation.Data
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
@@ -15,33 +15,35 @@ import javax.inject.Inject
  */
 class TrendingViewModel @Inject constructor(private val gifRepository: GifRepository) : ViewModel() {
 
-    private var loadObservable: Disposable? = null
+    var loadObservable: Disposable? = null
 
+    private var totalOffset = 0
     private val current: MutableList<Gif> = mutableListOf()
 
     val trendingUpdates: MutableLiveData<Data<List<Gif>>> = MutableLiveData()
     val isLoading: MutableLiveData<LoadingEvent> = MutableLiveData()
 
-    init {
-        isLoading.value = LoadingEvent(false, false)
-    }
-
     fun initialize() {
-        if (current.isEmpty()) load(0)
-        else trendingUpdates.value = Data(current, Data.Status.OK)
+        load(0)
     }
 
-    fun load(from: Int? = null) {
-        if (loadObservable == null || loadObservable?.isDisposed == true) {
-            // Giphy API's offset is inclusive (from, rather from next of),
-            // so we add +1 as not to fetch an image we already have.
-            val offset = from ?: current.size+1
+    fun initializeCurrent() {
+        trendingUpdates.value = Data(current, Data.Type.NEW)
+    }
+
+    fun load() {
+        load(null)
+    }
+
+    private fun load(from: Int? = null) {
+        if (isAvailable()) {
+            val offset = from ?: totalOffset
             val isInitial = offset == 0
             isLoading.value = LoadingEvent(true, isInitial)
             loadObservable = gifRepository.trending(offset, LIMIT_PER_PAGE)
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
-                    // Filter images that were pushed down by new trending gifs.
+                    // Filter elements that were pushed down by new trending gifs.
                     .map {
                         it.filter { g ->
                             !current.any {
@@ -50,31 +52,35 @@ class TrendingViewModel @Inject constructor(private val gifRepository: GifReposi
                         }
                     }.subscribe(
                             {
+                                // Keep increasing the non-filtered total we have requested to
+                                // avoid 0 size filtered lists endless loops.
+                                totalOffset += LIMIT_PER_PAGE
                                 current.addAll(it)
                                 isLoading.value = LoadingEvent(false, isInitial)
-                                trendingUpdates.value = Data(it, Data.Status.OK)
-                                // If we get a filtered, smaller update due to items being pushed down in
+                                trendingUpdates.value = Data(it, Data.Type.UPDATE)
+
+                                // If we get a filtered, smaller update (under half) due to items being pushed down in
                                 // the trending list, automatically start a new load request.
-                                if (it.size < LIMIT_PER_PAGE / 2) load()
+                                if (it.size < LIMIT_PER_PAGE / 2 && it.isNotEmpty()) load()
                             },
                             {
                                 isLoading.value = LoadingEvent(false, isInitial)
-                                trendingUpdates.value = Data(null, Data.Status.ERROR)
+                                trendingUpdates.value = Data(null, Data.Type.ERROR)
                             }
                     )
         }
     }
 
+    fun isAvailable() = loadObservable == null || loadObservable?.isDisposed == true
+
     data class LoadingEvent(val state: Boolean, val initial: Boolean)
 
     override fun onCleared() {
-        if (loadObservable?.isDisposed == false) {
-            loadObservable?.dispose()
-        }
+        loadObservable?.dispose()
         super.onCleared()
     }
 
     companion object {
-        const val LIMIT_PER_PAGE = 26
+        const val LIMIT_PER_PAGE = 31
     }
 }

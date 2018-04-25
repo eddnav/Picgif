@@ -1,7 +1,7 @@
 package com.eddnav.picgif.di
 
 import com.eddnav.picgif.data.gif.repository.GifRepository
-import com.eddnav.picgif.view.MainActivity
+import com.eddnav.picgif.view.gif.MainActivity
 import com.eddnav.picgif.view.gif.GifDetailActivity
 import dagger.Component
 import okhttp3.OkHttpClient

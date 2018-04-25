@@ -1,4 +1,4 @@
-package com.eddnav.picgif.view
+package com.eddnav.picgif.view.gif
 
 import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProviders
@@ -13,15 +13,17 @@ import android.view.View.VISIBLE
 import android.widget.Toast
 import com.eddnav.picgif.PicgifApplication
 import com.eddnav.picgif.R
-import com.eddnav.picgif.data.gif.Data
 import com.eddnav.picgif.di.ViewModelFactory
+import com.eddnav.picgif.presentation.Data
 import com.eddnav.picgif.presentation.gif.TrendingViewModel
-import com.eddnav.picgif.view.gif.GifAdapter
+import com.eddnav.picgif.view.RecyclerViewEndThresholdListener
 import kotlinx.android.synthetic.main.activity_main.*
 import javax.inject.Inject
 
 /**
  * TODO: Might want to migrate the UI of this activity to a fragment to support other screen configs.
+ * TODO: Add pull to refresh.
+ * TODO: Add 'list is empty' view.
  *
  * @author Eduardo Naveda
  */
@@ -45,24 +47,24 @@ class MainActivity : AppCompatActivity() {
         viewModel = ViewModelProviders.of(this, viewModelFactory).get(TrendingViewModel::class.java)
 
         viewModel.trendingUpdates.observe(this, Observer {
-            if (it?.status == Data.Status.ERROR) {
-                Toast.makeText(this, R.string.internet_problems, Toast.LENGTH_LONG).show()
-            } else {
-                val newGifs = it?.content!!
-                (recycler.adapter as GifAdapter).insert(newGifs)
+            when (it?.type) {
+                Data.Type.NEW -> (recycler.adapter as GifAdapter).replace(it.content!!)
+                Data.Type.UPDATE -> (recycler.adapter as GifAdapter).insert(it.content!!)
+                Data.Type.ERROR -> Toast.makeText(this, R.string.internet_problems, Toast.LENGTH_LONG).show()
             }
         })
 
         viewModel.isLoading.observe(this, Observer {
-            if (it!!.initial) {
+            if (it?.initial == true) {
                 if (it.state) initializing.visibility = VISIBLE else initializing.visibility = GONE
             } else {
                 // Might want to make this loading indicator part of the list in some way.
-                if (it.state) loading.visibility = VISIBLE else loading.visibility = GONE
+                if (it?.state == true) loading.visibility = VISIBLE else loading.visibility = GONE
             }
         })
 
-        viewModel.initialize()
+        if (savedInstanceState == null) viewModel.initialize()
+        else viewModel.initializeCurrent()
 
         recycler.addOnScrollListener(object : RecyclerViewEndThresholdListener(manager, 5) {
             override fun onThresholdReached() {

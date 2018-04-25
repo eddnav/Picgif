@@ -16,7 +16,7 @@ class RemoteMapper {
             return Gif(gif.id, gif.title, toData(gif.images.fixed_width_still), toData(gif.images.original))
         }
 
-        private fun toData(image: RemoteImage): Image {
+        fun toData(image: RemoteImage): Image {
             return Image(image.url, image.mp4, image.width, image.height)
         }
     }

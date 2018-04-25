@@ -54,6 +54,12 @@ class GifAdapter(private val context: Context, private val gifs: MutableList<Gif
         }
     }
 
+    fun replace(newGifs: List<Gif>) {
+        gifs.clear()
+        gifs.addAll(newGifs)
+        this.notifyDataSetChanged()
+    }
+
     fun insert(newGifs: List<Gif>) {
         val top = gifs.size
         gifs.addAll(newGifs)
