@@ -13,14 +13,14 @@ The app is structured using an MVVM inspired approach and layered as follows:
 
 Why MVVM?
 --
-MVVM was chosen over MVP due to benefits with Android lifecycle management brought by the Android Architecture Components. Furthermore, MVVM does not require tightly coupling the presentation and view in a 1:1 relationship, and thus makes for a leaner codebase without the many interfaces and methods of MVP.
+MVVM was chosen over MVP due to benefits with Android lifecycle management brought by the Android Architecture Components. Furthermore, MVVM does not require tightly coupling the presentation and view in a 1:1 relationship, and thus makes for a leaner codebase, without the many interfaces and methods of MVP.
 
 
 Renditions
 --
-The `fixed_width_still` renditions were chosen for the list due to them being a good size for mobile; however, with a small change on the remote mapper, we can change this to the `fixed_width_downsampled` or `fixed_width` without a problem (thanks to Glide supporting gifs), but using these comes with a high cpu usage price to pay.
+The `fixed_width_still` renditions were chosen for the list due to them being a good size for mobile; however, with a small change on the remote mapper, we can change this to the `fixed_width_downsampled` or `fixed_width` without a problem (thanks to Glide supporting gifs), but using these entails a constant high CPU usage.
 
-For the detail view, the `original` renditions were chosen due to them consistently providing an mp4 format option. As for the format itself, mp4 was chosen due to its small size compared to the original gifs and webp formats, and comparable to the downsized versions which sometimes are not present for some objects. However, mp4 are videos and thus, more cpu intensive; but an acceptable compromise, as the detail view is focused in getting the user a fast and smooth animation viewing experience.
+For the detail view, the `original` renditions were chosen due to them consistently providing an mp4 format option. As for the format itself, mp4 was chosen due to its small size compared to the original gifs and webp formats, and comparable to the downsized versions which sometimes are not present for some objects. However, mp4s are videos and thus, more cpu intensive; but an acceptable compromise, as the detail view is focused in getting the user a fast and smooth animation viewing experience.
 
 Third Party Libraries
 --
